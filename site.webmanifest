@@ -1,0 +1,13 @@
+{
+  "name": "Macan.Dev",
+  "short_name": "MACAN",
+  "description": "Macan.Dev — Security Researcher, Reverse-Engineer & Developer",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ],
+  "theme_color": "#14171c",
+  "background_color": "#14171c",
+  "display": "standalone",
+  "start_url": "./"
+}
