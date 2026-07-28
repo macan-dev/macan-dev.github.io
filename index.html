@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ماکان — پژوهشگر امنیت و توسعه‌دهنده</title>
+<meta name="description" content="ماکان (Macan.Dev) — پژوهشگر امنیت، مهندس معکوس و توسعه‌دهندهٔ چندزبانه. تست نفوذ، توسعهٔ اکسپلویت، DevOps و مشاورهٔ کسب‌وکار." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Vazirmatn:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --bg:#14171c;
+  --bg-2:#0f1216;
+  --coral:#e15a4c;
+  --coral-2:#f0705f;
+  --coral-deep:#c14a3e;
+  --coral-glow:rgba(225,90,76,.35);
+  --gold:#e0a44f;
+  --cool:#5b9bd5;
+  --fg:#f3efea;
+  --muted:#aab0b9;
+  --muted-2:#7b818b;
+  --glass:rgba(255,255,255,.055);
+  --glass-2:rgba(255,255,255,.085);
+  --glass-brd:rgba(255,255,255,.12);
+  --glass-brd-2:rgba(255,255,255,.2);
+  --hi:inset 0 1px 0 rgba(255,255,255,.28), inset 0 -1px 1px rgba(0,0,0,.25);
+  --drop:0 30px 60px -24px rgba(0,0,0,.6);
+  --radius:26px;
+  --radius-sm:16px;
+  --maxw:1120px;
+  --space:clamp(1rem,3.5vw,2rem);
+  --sans:'Plus Jakarta Sans',system-ui,sans-serif;
+  --fa:'Vazirmatn',system-ui,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --blur:saturate(170%) blur(26px);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}}
+body{font-family:var(--fa);background:var(--bg);color:var(--fg);line-height:1.75;overflow-x:hidden;-webkit-font-smoothing:antialiased;padding-bottom:104px}
+html[dir="ltr"] body{font-family:var(--sans);line-height:1.65}
+.mono{font-family:var(--mono)}
+.latin{font-family:var(--sans)}
+
+/* Liquid background: colorful orbs behind glass */
+.bg-fx{position:fixed;inset:0;z-index:-3;background:radial-gradient(120% 100% at 50% 0%,#1b2028,var(--bg-2))}
+.orb{position:fixed;border-radius:50%;filter:blur(80px);z-index:-2;opacity:.55;animation:drift 22s ease-in-out infinite}
+.orb.o1{width:460px;height:460px;background:var(--coral);top:-140px;inset-inline-end:-100px}
+.orb.o2{width:400px;height:400px;background:var(--cool);top:34%;inset-inline-start:-140px;animation-delay:-7s;opacity:.4}
+.orb.o3{width:420px;height:420px;background:var(--gold);bottom:-160px;inset-inline-end:22%;animation-delay:-13s;opacity:.35}
+.orb.o4{width:340px;height:340px;background:#9b6ad0;top:60%;inset-inline-end:-120px;animation-delay:-4s;opacity:.3}
+@keyframes drift{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(38px,-34px) scale(1.09)}66%{transform:translate(-30px,26px) scale(.94)}}
+.noise{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.03;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+.container{max-width:var(--maxw);margin:0 auto;padding:0 var(--space)}
+
+/* Glass primitive */
+.glass{background:var(--glass);border:1px solid var(--glass-brd);border-radius:var(--radius);
+  -webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);box-shadow:var(--hi),var(--drop);position:relative;overflow:hidden}
+.glass::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(160deg,rgba(255,255,255,.14),rgba(255,255,255,0) 40%)}
+
+/* Logo */
+.logo{color:var(--fg)}
+.logo.coral{color:var(--coral)}
+
+/* iOS-style bottom liquid-glass tab bar */
+.tabbar{position:fixed;bottom:calc(16px + env(safe-area-inset-bottom,0px));inset-inline:0;z-index:60;display:flex;justify-content:center;padding:0 var(--space);pointer-events:none}
+.tabbar-inner{position:relative;pointer-events:auto;display:flex;align-items:stretch;gap:.2rem;padding:.45rem;border-radius:28px;max-width:100%;
+  background:rgba(20,23,28,.5);border:1px solid var(--glass-brd);
+  -webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);
+  box-shadow:var(--hi),0 20px 46px -16px rgba(0,0,0,.75)}
+.tabbar-inner::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,0) 55%)}
+.tab{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  min-width:62px;padding:.5rem .55rem;border-radius:20px;cursor:pointer;text-decoration:none;color:var(--muted);
+  background:transparent;border:0;font-family:inherit;overflow:hidden;isolation:isolate;
+  transition:color .25s,background .25s,transform .22s cubic-bezier(.2,.85,.25,1.05)}
+.tab>*{position:relative;z-index:2}
+.tab svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;transition:transform .25s}
+.tab .tlabel{font-size:.64rem;font-weight:700;letter-spacing:.2px;white-space:nowrap}
+.tab-lang .tlabel{font-family:var(--mono);font-size:.6rem}
+.tab:hover{color:var(--fg)}
+.tab:active{transform:scale(.9)}
+.tab.active{color:var(--coral);background:rgba(225,90,76,.16);box-shadow:var(--hi)}
+.tab.active svg{transform:translateY(-1px) scale(1.06)}
+.tab::after{content:"";position:absolute;top:-30%;inset-inline-start:-85%;z-index:1;width:50%;height:160%;pointer-events:none;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.5),transparent);transform:skewX(-18deg);
+  transition:inset-inline-start .6s cubic-bezier(.4,0,.2,1)}
+.tab:hover::after{inset-inline-start:145%}
+.tab .ripple{position:absolute;z-index:1;border-radius:50%;pointer-events:none;transform:translate(-50%,-50%) scale(0);
+  background:radial-gradient(circle,rgba(255,255,255,.5),rgba(255,255,255,0) 68%);animation:rip .62s ease-out forwards}
+@media(max-width:520px){.tab{min-width:0;padding:.55rem .5rem}.tab .tlabel{display:none}.tabbar-inner{gap:.1rem}}
+
+/* Hero */
+.hero{padding:clamp(3rem,9vw,5.5rem) 0 clamp(3rem,7vw,5rem);text-align:center}
+.hero .halo{position:relative;display:inline-grid;place-items:center;margin-bottom:1.4rem}
+.hero .halo::before{content:"";position:absolute;width:230px;height:230px;border-radius:50%;
+  background:radial-gradient(circle,var(--coral-glow),transparent 62%);filter:blur(18px)}
+.hero .halo svg{width:clamp(118px,20vw,150px);height:auto;position:relative;filter:drop-shadow(0 10px 26px rgba(0,0,0,.5));animation:rise 1s cubic-bezier(.2,.8,.25,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(18px) scale(.96)}to{opacity:1;transform:none}}
+.hero .kicker{font-family:var(--mono);font-size:.76rem;letter-spacing:3px;color:var(--coral);text-transform:uppercase}
+h1.wordmark{font-family:var(--sans);font-weight:800;font-size:clamp(2.8rem,10vw,5.6rem);letter-spacing:.14em;line-height:1;margin:.3rem 0 .1rem;
+  background:linear-gradient(180deg,#fff,#d8d2ca);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero .motto{font-size:clamp(1.02rem,3vw,1.4rem);color:var(--fg);letter-spacing:1px;margin-top:.4rem}
+.role-pill{display:inline-flex;align-items:center;gap:.6rem;margin:1.5rem 0 1.7rem;padding:.55rem 1.1rem;border-radius:999px;
+  background:var(--glass);border:1px solid var(--glass-brd);-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);box-shadow:var(--hi)}
+.role-pill .d{width:8px;height:8px;border-radius:50%;background:var(--coral);box-shadow:0 0 10px var(--coral);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.role-pill .role{font-family:var(--mono);font-size:.9rem;color:var(--fg);min-height:1.3em;direction:ltr}
+.role-pill .cur{display:inline-block;width:2px;height:1em;background:var(--coral);vertical-align:-2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.cta-row{display:flex;flex-wrap:wrap;gap:.8rem;justify-content:center}
+.btn{position:relative;display:inline-flex;align-items:center;gap:.55rem;font-weight:700;font-size:.95rem;text-decoration:none;
+  padding:.85rem 1.5rem;border-radius:999px;cursor:pointer;border:1px solid transparent;overflow:hidden;isolation:isolate;
+  -webkit-tap-highlight-color:transparent;transition:transform .28s cubic-bezier(.2,.85,.25,1.05),box-shadow .28s,background .28s,border-color .28s}
+.btn>*{position:relative;z-index:2}
+/* gel top highlight */
+.btn::before{content:"";position:absolute;inset:0;z-index:1;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(180deg,rgba(255,255,255,.24),rgba(255,255,255,0) 52%)}
+/* liquid shine sweep */
+.btn::after{content:"";position:absolute;top:-30%;inset-inline-start:-75%;z-index:1;width:45%;height:160%;pointer-events:none;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.6),transparent);transform:skewX(-18deg);
+  transition:inset-inline-start .65s cubic-bezier(.4,0,.2,1)}
+.btn:hover::after{inset-inline-start:135%}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:translateY(0) scale(.955)}
+.btn-primary{background:linear-gradient(120deg,var(--coral),var(--coral-deep));color:#fff;box-shadow:0 14px 34px -10px var(--coral-glow),var(--hi)}
+.btn-primary:hover{box-shadow:0 22px 50px -10px var(--coral-glow),var(--hi)}
+.btn-glass{background:var(--glass-2);border-color:var(--glass-brd);color:var(--fg);-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);box-shadow:var(--hi)}
+.btn-glass:hover{border-color:var(--glass-brd-2)}
+/* click ripple */
+.btn .ripple{position:absolute;z-index:1;border-radius:50%;pointer-events:none;transform:translate(-50%,-50%) scale(0);
+  background:radial-gradient(circle,rgba(255,255,255,.55),rgba(255,255,255,0) 68%);animation:rip .62s ease-out forwards}
+@keyframes rip{to{transform:translate(-50%,-50%) scale(1);opacity:0}}
+
+/* Section */
+section{padding:clamp(3rem,7vw,5rem) 0}
+.sec-head{margin-bottom:2.4rem;text-align:center}
+.sec-num{font-family:var(--mono);font-size:.76rem;letter-spacing:3px;color:var(--coral);opacity:.85}
+.sec-title{font-family:var(--sans);font-size:clamp(1.8rem,4.5vw,2.7rem);font-weight:800;letter-spacing:-.5px;margin-top:.5rem;line-height:1.15}
+html[dir="rtl"] .sec-title{font-family:var(--fa)}
+.sec-sub{color:var(--muted);margin:.7rem auto 0;max-width:54ch;font-size:1.01rem}
+
+/* About */
+.about-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:1.2rem}
+@media(max-width:840px){.about-grid{grid-template-columns:1fr}}
+.pad{padding:2rem}
+.about p{color:var(--muted);margin-bottom:1.05rem;font-size:1.02rem}
+.about p:last-child{margin-bottom:0}
+.about strong{color:var(--fg);font-weight:600}
+.philo{display:flex;flex-direction:column;gap:1.1rem;justify-content:center}
+.philo .q{font-size:1.1rem;color:var(--fg);font-weight:600;padding-inline-start:.9rem;border-inline-start:2px solid var(--coral);line-height:1.5}
+
+/* Stats row */
+.stats{display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;margin-bottom:2.4rem}
+.stat{padding:1rem 1.6rem;text-align:center;min-width:120px}
+.stat b{display:block;font-family:var(--mono);font-size:1.7rem;color:var(--fg);line-height:1}
+.stat span{font-size:.76rem;color:var(--muted-2);letter-spacing:.5px;margin-top:.35rem;display:block}
+
+/* Skills */
+.grid-auto{display:grid;grid-template-columns:repeat(auto-fit,minmax(272px,1fr));gap:1.1rem}
+.skill{padding:1.6rem;transition:.28s}
+.skill:hover{transform:translateY(-5px);border-color:var(--glass-brd-2)}
+.skill-icon{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;margin-bottom:1.05rem;
+  background:rgba(225,90,76,.14);border:1px solid rgba(225,90,76,.28);box-shadow:var(--hi)}
+.skill-icon svg{width:23px;height:23px;stroke:var(--coral);fill:none;stroke-width:1.9}
+.skill h3{font-size:1.16rem;font-weight:700;margin-bottom:.5rem}
+.skill p{color:var(--muted);font-size:.94rem}
+.chips{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:1rem}
+.chip{font-family:var(--mono);font-size:.72rem;color:var(--muted);background:rgba(255,255,255,.05);
+  border:1px solid var(--glass-brd);border-radius:8px;padding:.28rem .55rem;direction:ltr}
+
+/* Projects */
+.proj-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.1rem}
+.proj{padding:1.5rem;display:flex;flex-direction:column;gap:.7rem;text-decoration:none;color:var(--fg);transition:.28s}
+.proj:hover{transform:translateY(-5px);border-color:var(--glass-brd-2)}
+.proj-top{display:flex;align-items:center;gap:.6rem}
+.proj-top .repo-ico{width:20px;height:20px;stroke:var(--coral);fill:none;stroke-width:1.8;flex-shrink:0}
+.proj-name{font-family:var(--mono);font-weight:600;font-size:1.05rem;direction:ltr}
+.proj-desc{color:var(--muted);font-size:.92rem;flex:1;min-height:1.4em}
+.proj-meta{display:flex;align-items:center;gap:1.1rem;font-size:.82rem;color:var(--muted-2);direction:ltr}
+.proj-meta .m{display:flex;align-items:center;gap:.35rem}
+.proj-meta svg{width:14px;height:14px}
+.lang-dot{width:11px;height:11px;border-radius:50%;display:inline-block}
+.proj-loading{grid-column:1/-1;text-align:center;color:var(--muted-2);font-family:var(--mono);font-size:.9rem;padding:2rem}
+.proj-cta{text-align:center;margin-top:1.8rem}
+/* Contributions heatmap */
+.contrib{padding:1.4rem 1.6rem;margin-bottom:1.1rem}
+.contrib-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.1rem;flex-wrap:wrap}
+.contrib-title{font-weight:700;font-size:1rem}
+.contrib-total{font-size:.82rem;color:var(--muted-2)}
+.heatmap-wrap{overflow-x:auto;padding-bottom:.4rem;direction:ltr}
+.heatmap{display:grid;grid-auto-flow:column;grid-template-rows:repeat(7,11px);gap:3px;min-width:max-content}
+.hm-cell{width:11px;height:11px;border-radius:3px;background:rgba(255,255,255,.05);transition:transform .15s}
+.hm-cell:hover{transform:scale(1.35)}
+.hm-legend{display:flex;align-items:center;gap:.35rem;margin-top:.8rem;font-size:.72rem;color:var(--muted-2);justify-content:flex-end;direction:ltr}
+.hm-legend .hm-cell{cursor:default}
+.hm-legend .hm-cell:hover{transform:none}
+
+/* Certs */
+.cert{padding:1.5rem 1.2rem;text-align:center;transition:.26s}
+.cert:hover{transform:translateY(-5px);border-color:var(--glass-brd-2)}
+.cert .code{font-family:var(--mono);font-size:1.35rem;font-weight:700;color:var(--coral);letter-spacing:.3px;direction:ltr}
+.cert .r{width:32px;height:2px;background:var(--coral);opacity:.6;border-radius:2px;margin:.7rem auto}
+.cert .name{color:var(--muted);font-size:.85rem}
+
+/* Contact */
+.c-link{position:relative;display:flex;align-items:center;gap:.9rem;padding:1.1rem 1.2rem;text-decoration:none;color:var(--fg);isolation:isolate;
+  transition:transform .26s cubic-bezier(.2,.85,.25,1.05),border-color .26s,box-shadow .26s}
+.c-link>*{position:relative;z-index:2}
+.c-link:hover{transform:translateY(-4px);border-color:var(--glass-brd-2)}
+.c-link:active{transform:translateY(-1px) scale(.985)}
+.c-link::after{content:"";position:absolute;top:-30%;inset-inline-start:-85%;z-index:1;width:45%;height:160%;pointer-events:none;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.4),transparent);transform:skewX(-18deg);
+  transition:inset-inline-start .6s cubic-bezier(.4,0,.2,1)}
+.c-link:hover::after{inset-inline-start:145%}
+.c-link .ripple{position:absolute;z-index:1;border-radius:50%;pointer-events:none;transform:translate(-50%,-50%) scale(0);
+  background:radial-gradient(circle,rgba(255,255,255,.4),rgba(255,255,255,0) 68%);animation:rip .62s ease-out forwards}
+.c-link .ci{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;flex-shrink:0;background:rgba(255,255,255,.06);border:1px solid var(--glass-brd);box-shadow:var(--hi)}
+.c-link .ci svg{width:22px;height:22px}
+.c-link .lbl{font-size:.75rem;color:var(--muted-2);letter-spacing:.4px}
+.c-link .val{font-family:var(--mono);font-size:.89rem;direction:ltr;word-break:break-all;color:var(--fg)}
+html[dir="rtl"] .c-link{text-align:right}
+
+/* Donate */
+.donate-note{text-align:center;color:var(--muted);margin-bottom:2rem;max-width:52ch;margin-inline:auto}
+.coin{padding:1.2rem;transition:.22s}
+.coin:hover{border-color:var(--glass-brd-2)}
+.coin-head{display:flex;align-items:center;gap:.7rem;margin-bottom:.85rem}
+.coin-sym{width:42px;height:42px;display:grid;place-items:center;flex-shrink:0}
+.coin-sym>svg{width:42px;height:42px;display:block;filter:drop-shadow(0 3px 8px rgba(0,0,0,.45))}
+.coin-name{font-weight:600;font-size:1rem}
+.coin-net{font-family:var(--mono);font-size:.72rem;color:var(--muted-2)}
+.addr-box{display:flex;align-items:center;gap:.5rem;background:rgba(0,0,0,.28);border:1px solid var(--glass-brd);border-radius:12px;padding:.55rem .65rem}
+.addr{font-family:var(--mono);font-size:.74rem;color:var(--muted);direction:ltr;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.copy-btn{background:rgba(255,255,255,.06);border:1px solid var(--glass-brd);color:var(--muted);border-radius:10px;padding:.42rem .5rem;cursor:pointer;transition:.2s;flex-shrink:0;display:grid;place-items:center}
+.copy-btn:hover{color:var(--coral);border-color:var(--coral)}
+.copy-btn.done{color:var(--coral);border-color:var(--coral)}
+.copy-btn svg{width:16px;height:16px}
+
+footer{padding:3rem 0 2.4rem;text-align:center;color:var(--muted-2);font-size:.85rem;margin-top:2rem}
+footer .fb{display:flex;align-items:center;justify-content:center;gap:.55rem;margin-bottom:1rem}
+footer .fb svg{width:30px;height:30px}
+footer .fb .wm{font-family:var(--sans);font-weight:800;letter-spacing:2px;color:var(--fg)}
+footer .made{font-family:var(--mono);font-size:.75rem;margin-top:.7rem;opacity:.8}
+
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
+.reveal.in{opacity:1;transform:none}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(160%);background:rgba(20,23,28,.85);border:1px solid var(--coral);
+  color:var(--fg);padding:.7rem 1.2rem;border-radius:14px;font-size:.9rem;z-index:100;transition:transform .35s cubic-bezier(.2,.9,.3,1.3);display:flex;align-items:center;gap:.5rem;
+  -webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);box-shadow:var(--hi),var(--drop)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast svg{width:18px;height:18px;stroke:var(--coral);fill:none;stroke-width:2}
+
+[lang-en]{display:none}
+html[dir="ltr"] [lang-fa]{display:none}
+html[dir="ltr"] [lang-en]{display:inline}
+html[dir="ltr"] [lang-en].block{display:block}
+[lang-fa].block{display:block}
+</style>
+</head>
+<body>
+<div class="bg-fx"></div>
+<div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div><div class="orb o4"></div>
+<div class="noise"></div>
+
+<!-- Reusable SVG logo -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="macan-logo" viewBox="0 0 200 160">
+    <g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="100" cy="80" r="42"/>
+      <ellipse cx="100" cy="80" rx="15.5" ry="42"/>
+      <ellipse cx="100" cy="80" rx="31" ry="42"/>
+      <line x1="58" y1="80" x2="142" y2="80"/>
+      <path d="M67 54 H133"/><path d="M67 106 H133"/>
+      <path d="M60 68 H46 V58"/><circle cx="46" cy="53" r="4.4"/>
+      <path d="M60 92 H46 V102"/><circle cx="46" cy="107" r="4.4"/>
+      <path d="M140 68 H154 V58"/><circle cx="154" cy="53" r="4.4"/>
+      <path d="M140 92 H154 V102"/><circle cx="154" cy="107" r="4.4"/>
+    </g>
+  </symbol>
+</svg>
+
+<nav class="tabbar" aria-label="Primary">
+  <div class="tabbar-inner">
+    <a class="tab" href="#top" data-spy="top">
+      <svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M9.5 20v-6h5v6"/></svg>
+      <span class="tlabel"><span lang-fa>خانه</span><span lang-en>Home</span></span>
+    </a>
+    <a class="tab" href="#about" data-spy="about">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+      <span class="tlabel"><span lang-fa>درباره</span><span lang-en>About</span></span>
+    </a>
+    <a class="tab" href="#skills" data-spy="skills">
+      <svg viewBox="0 0 24 24"><polyline points="7 8 3 12 7 16"/><polyline points="17 8 21 12 17 16"/><line x1="14" y1="5" x2="10" y2="19"/></svg>
+      <span class="tlabel"><span lang-fa>تخصص‌ها</span><span lang-en>Skills</span></span>
+    </a>
+    <a class="tab" href="#projects" data-spy="projects">
+      <svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.4"/><circle cx="6" cy="18" r="2.4"/><circle cx="18" cy="8" r="2.4"/><path d="M6 8.4v7.2M8.4 6H15a3 3 0 0 1 3 3v1"/></svg>
+      <span class="tlabel"><span lang-fa>پروژه‌ها</span><span lang-en>Projects</span></span>
+    </a>
+    <a class="tab" href="#contact" data-spy="contact">
+      <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 7 8.5 6 8.5-6"/></svg>
+      <span class="tlabel"><span lang-fa>ارتباط</span><span lang-en>Contact</span></span>
+    </a>
+    <a class="tab" href="#donate" data-spy="donate">
+      <svg viewBox="0 0 24 24"><path d="M12 20.3S4.5 15.6 4.5 10.3A3.6 3.6 0 0 1 12 8a3.6 3.6 0 0 1 7.5 2.3c0 5.3-7.5 10-7.5 10z"/></svg>
+      <span class="tlabel"><span lang-fa>حمایت</span><span lang-en>Donate</span></span>
+    </a>
+    <button class="tab tab-lang" id="langBtn" aria-label="تغییر زبان / Toggle language">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg>
+      <span class="tlabel" id="langLabel">English</span>
+    </button>
+  </div>
+</nav>
+
+<main>
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="container">
+    <div class="halo"><svg class="logo"><use href="#macan-logo"/></svg></div>
+    <div class="kicker">Macan.Dev</div>
+    <h1 class="wordmark">MACAN</h1>
+    <p class="motto"><span lang-fa>زندگی نو، نسل نو</span><span lang-en>New Life, New Generation</span></p>
+    <div class="role-pill"><span class="d"></span><span class="role mono"><span id="typed"></span><span class="cur"></span></span></div>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="#contact">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+        <span lang-fa>تماس با من</span><span lang-en>Get in touch</span>
+      </a>
+      <a class="btn btn-glass" href="https://github.com/macan-dev" target="_blank" rel="noopener">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.3-1.8-1.3-1.8-1.1-.7 0-.7 0-.7 1.2 0 1.9 1.2 1.9 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17 4.6 18 4.9 18 4.9c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.1 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3z"/></svg>
+        <span lang-fa>گیت‌هاب</span><span lang-en>GitHub</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="sec-num">01 — ABOUT</div>
+      <h2 class="sec-title"><span lang-fa>درباره من</span><span lang-en>About</span></h2>
+      <p class="sec-sub"><span lang-fa>امنیت تهاجمی، در کنار مهندسیِ منظم.</span><span lang-en>Offensive security meets disciplined engineering.</span></p>
+    </div>
+    <div class="about-grid">
+      <div class="glass pad about reveal">
+        <p>
+          <span lang-fa class="block">من در نقطهٔ تلاقیِ <strong>حمله و ساخت</strong> زندگی می‌کنم. یک سو: تست نفوذ وب، تزریق SQL، XSS، RCE، توسعهٔ اکسپلویت، مهندسی معکوس و کرک اپلیکیشن. سوی دیگر: ساخت نرم‌افزار و زیرساختِ پایدار به‌عنوان <strong>مدیر سرور و Active Directory</strong> و مهندس DevOps.</span>
+          <span lang-en class="block">I live at the intersection of <strong>attack and construction</strong>. On one side: web penetration testing, SQL injection, XSS, RCE, exploit development, reverse-engineering and app cracking. On the other: shipping resilient software and infrastructure as a <strong>server & Active Directory administrator</strong> and DevOps engineer.</span>
+        </p>
+        <p>
+          <span lang-fa class="block">مثل <strong>Morphling</strong>، خودم را با نیازِ هر مأموریت وفق می‌دهم — مشاور کسب‌وکار وقتی استراتژی مهم است، مهندس معکوس وقتی هیچ‌چیزِ دیگری جواب نمی‌دهد، و سازنده وقتی زمانِ خلق کردن است.</span>
+          <span lang-en class="block">Like <strong>Morphling</strong>, I adapt to whatever the mission needs — a business advisor when strategy matters, a reverse-engineer when nothing else works, a builder when it's time to create.</span>
+        </p>
+      </div>
+      <div class="glass pad philo reveal">
+        <div class="q"><span lang-fa>زندگی نو، نسل نو.</span><span lang-en>New Life, New Generation.</span></div>
+        <div class="q"><span lang-fa>اول پول، بعد سلامتی.</span><span lang-en>First Money, then Health.</span></div>
+        <div class="q"><span lang-fa>درد باعث قوی شدنت می‌شود.</span><span lang-en>Pain Makes You Stronger.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="sec-num">02 — SKILLS</div>
+      <h2 class="sec-title"><span lang-fa>تخصص‌ها و زرادخانه</span><span lang-en>Skills & Arsenal</span></h2>
+      <p class="sec-sub"><span lang-fa>از بایت تا اتاق مدیریت — پشتهٔ کامل حمله، دفاع و تحویل.</span><span lang-en>From bytes to boardrooms — offense, defense and delivery.</span></p>
+    </div>
+    <div class="grid-auto">
+      <div class="glass skill reveal">
+        <div class="skill-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <h3><span lang-fa>تست نفوذ و اکسپلویت وب</span><span lang-en>Web Pentest & Exploitation</span></h3>
+        <p><span lang-fa>یافتن و بهره‌برداری از آسیب‌پذیری‌ها، پیش از مهاجمانِ واقعی.</span><span lang-en>Finding and weaponizing flaws before the bad actors do.</span></p>
+        <div class="chips"><span class="chip">SQL Injection</span><span class="chip">XSS</span><span class="chip">RCE</span><span class="chip">Web Pentest</span></div>
+      </div>
+      <div class="glass skill reveal">
+        <div class="skill-icon"><svg viewBox="0 0 24 24"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+        <h3><span lang-fa>مهندسی معکوس</span><span lang-en>Reverse Engineering</span></h3>
+        <p><span lang-fa>دیس‌اسمبل، کرک و درکِ نرم‌افزار از درون به بیرون.</span><span lang-en>Disassembling, cracking and understanding software inside-out.</span></p>
+        <div class="chips"><span class="chip">Reverse-Eng</span><span class="chip">App Cracking</span><span class="chip">Debugging</span></div>
+      </div>
+      <div class="glass skill reveal">
+        <div class="skill-icon"><svg viewBox="0 0 24 24"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg></div>
+        <h3><span lang-fa>توسعهٔ چندزبانه</span><span lang-en>Polyglot Development</span></h3>
+        <p><span lang-fa>دوازده زبان، یک هدف: ابزارِ درست برای هر لایهٔ سیستم.</span><span lang-en>Twelve languages, one goal: the right tool for every layer.</span></p>
+        <div class="chips"><span class="chip">Python</span><span class="chip">Rust</span><span class="chip">Go</span><span class="chip">C#</span><span class="chip">C / C++</span><span class="chip">Java</span><span class="chip">Kotlin</span><span class="chip">Perl</span></div>
+      </div>
+      <div class="glass skill reveal">
+        <div class="skill-icon"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+        <h3><span lang-fa>مدیریت سرور و AD</span><span lang-en>Server & AD Administration</span></h3>
+        <p><span lang-fa>مدیریت Active Directory، سرورها و هویت در مقیاسِ محصول.</span><span lang-en>Running Active Directory, servers and identity at scale.</span></p>
+        <div class="chips"><span class="chip">Active Directory</span><span class="chip">Server Admin</span><span class="chip">MCSE 2022</span></div>
+      </div>
+      <div class="glass skill reveal">
+        <div class="skill-icon"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-9-9c2.5 0 4.7 1 6.3 2.6"/><path d="M21 3v6h-6"/></svg></div>
+        <h3><span lang-fa>DevOps و اتوماسیون</span><span lang-en>DevOps & Automation</span></h3>
+        <p><span lang-fa>CI/CD، زیرساخت و پایپ‌لاین‌هایی که خودشان تحویل و ترمیم می‌شوند.</span><span lang-en>CI/CD, infra and pipelines that ship and heal themselves.</span></p>
+        <div class="chips"><span class="chip">DevOps</span><span class="chip">CI/CD</span><span class="chip">NoSQL</span><span class="chip">MySQL</span></div>
+      </div>
+      <div class="glass skill reveal">
+        <div class="skill-icon"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg></div>
+        <h3><span lang-fa>مشاورهٔ کسب‌وکار</span><span lang-en>Business Advisory</span></h3>
+        <p><span lang-fa>تبدیلِ عمقِ فنی به استراتژی، رشد و تصمیم‌های درست.</span><span lang-en>Turning technical depth into strategy and growth.</span></p>
+        <div class="chips"><span class="chip">Strategy</span><span class="chip">Advisory</span><span class="chip">Growth</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="sec-num">03 — OPEN SOURCE</div>
+      <h2 class="sec-title"><span lang-fa>پروژه‌ها</span><span lang-en>Projects</span></h2>
+      <p class="sec-sub"><span lang-fa>مستقیم و زنده از گیت‌هاب من بارگذاری می‌شود.</span><span lang-en>Pulled live from my GitHub, sorted by stars.</span></p>
+    </div>
+    <div class="stats reveal" id="ghStats">
+      <div class="glass stat"><b id="stRepos">4</b><span lang-fa>مخزن</span><span lang-en>Repositories</span></div>
+      <div class="glass stat"><b id="stFollowers">111</b><span lang-fa>دنبال‌کننده</span><span lang-en>Followers</span></div>
+      <div class="glass stat"><b id="stStars">470+</b><span lang-fa>ستاره</span><span lang-en>Total Stars</span></div>
+    </div>
+    <div class="glass contrib reveal" id="contribCard" style="display:none">
+      <div class="contrib-head">
+        <span class="contrib-title"><span lang-fa>مشارکت‌های سال گذشته</span><span lang-en>Contributions this year</span></span>
+        <span class="contrib-total" id="contribTotal"></span>
+      </div>
+      <div class="heatmap-wrap"><div class="heatmap" id="heatmap"></div></div>
+      <div class="hm-legend"><span lang-fa>کمتر</span><span lang-en>Less</span>
+        <span class="hm-cell" style="background:rgba(255,255,255,.05)"></span>
+        <span class="hm-cell" style="background:rgba(225,90,76,.30)"></span>
+        <span class="hm-cell" style="background:rgba(225,90,76,.52)"></span>
+        <span class="hm-cell" style="background:rgba(225,90,76,.76)"></span>
+        <span class="hm-cell" style="background:#e15a4c"></span>
+        <span lang-fa>بیشتر</span><span lang-en>More</span>
+      </div>
+    </div>
+    <div class="proj-grid" id="projGrid">
+      <div class="proj-loading mono"><span lang-fa>در حال بارگذاری از گیت‌هاب…</span><span lang-en>Loading from GitHub…</span></div>
+    </div>
+    <div class="proj-cta">
+      <a class="btn btn-glass" href="https://github.com/macan-dev?tab=repositories" target="_blank" rel="noopener">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.3-1.8-1.3-1.8-1.1-.7 0-.7 0-.7 1.2 0 1.9 1.2 1.9 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17 4.6 18 4.9 18 4.9c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.1 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3z"/></svg>
+        <span lang-fa>همهٔ مخزن‌ها در گیت‌هاب</span><span lang-en>View all on GitHub</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- CERTS -->
+<section id="certs">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="sec-num">04 — CREDENTIALS</div>
+      <h2 class="sec-title"><span lang-fa>گواهی‌نامه‌ها و تحصیلات</span><span lang-en>Certifications & Education</span></h2>
+    </div>
+    <div class="grid-auto">
+      <div class="glass cert reveal"><div class="code">CEH 22</div><div class="r"></div><div class="name"><span lang-fa>هکر اخلاقیِ معتبر</span><span lang-en>Certified Ethical Hacker</span></div></div>
+      <div class="glass cert reveal"><div class="code">SANS 542</div><div class="r"></div><div class="name"><span lang-fa>تست نفوذِ وب‌اپلیکیشن</span><span lang-en>Web App Penetration Testing</span></div></div>
+      <div class="glass cert reveal"><div class="code">MCSE 2022</div><div class="r"></div><div class="name"><span lang-fa>متخصص راهکارهای مایکروسافت</span><span lang-en>MS Certified Solutions Expert</span></div></div>
+      <div class="glass cert reveal"><div class="code">M.Sc</div><div class="r"></div><div class="name"><span lang-fa>فوق‌لیسانس نرم‌افزار — دانشگاه نورث وست، آمریکا</span><span lang-en>Software Eng. — Northwest University, USA</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="sec-num">05 — CONNECT</div>
+      <h2 class="sec-title"><span lang-fa>بیایید در ارتباط باشیم</span><span lang-en>Let's Connect</span></h2>
+      <p class="sec-sub"><span lang-fa>از هر کانالی که خواستید پیام دهید — همه را می‌خوانم.</span><span lang-en>Reach out on any channel — I read them all.</span></p>
+    </div>
+    <div class="grid-auto">
+      <a class="glass c-link" href="https://github.com/macan-dev" target="_blank" rel="noopener">
+        <span class="ci"><svg viewBox="0 0 24 24" fill="#f3efea"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.3-1.8-1.3-1.8-1.1-.7 0-.7 0-.7 1.2 0 1.9 1.2 1.9 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17 4.6 18 4.9 18 4.9c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.1 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3z"/></svg></span>
+        <div><div class="lbl">GitHub</div><div class="val">github.com/macan-dev</div></div>
+      </a>
+      <a class="glass c-link" href="https://youtube.com/@MacanDev" target="_blank" rel="noopener">
+        <span class="ci"><svg viewBox="0 0 24 24" fill="#e15a4c"><path d="M23 12s0-3.9-.5-5.6a2.9 2.9 0 0 0-2-2C18.7 4 12 4 12 4s-6.7 0-8.5.4a2.9 2.9 0 0 0-2 2C1 8.1 1 12 1 12s0 3.9.5 5.6a2.9 2.9 0 0 0 2 2C5.3 20 12 20 12 20s6.7 0 8.5-.4a2.9 2.9 0 0 0 2-2C23 15.9 23 12 23 12zM10 15.5v-7l6 3.5-6 3.5z"/></svg></span>
+        <div><div class="lbl">YouTube</div><div class="val">@MacanDev</div></div>
+      </a>
+      <a class="glass c-link" href="https://t.me/EzAccess1" target="_blank" rel="noopener">
+        <span class="ci"><svg viewBox="0 0 24 24" fill="#5b9bd5"><path d="M21.9 4.3 18.7 19.4c-.24 1.06-.87 1.32-1.76.82l-4.86-3.58-2.35 2.26c-.26.26-.48.48-.98.48l.35-4.95L18.1 5.9c.4-.35-.08-.55-.62-.2L6.9 12.6l-4.9-1.53c-1.07-.33-1.09-1.06.22-1.57L20.5 2.8c.89-.33 1.67.2 1.4 1.5z"/></svg></span>
+        <div><div class="lbl"><span lang-fa>کانال تلگرام</span><span lang-en>Telegram Channel</span></div><div class="val">t.me/EzAccess1</div></div>
+      </a>
+      <a class="glass c-link" href="https://t.me/Macan_Dev" target="_blank" rel="noopener">
+        <span class="ci"><svg viewBox="0 0 24 24" fill="#5b9bd5"><path d="M21.9 4.3 18.7 19.4c-.24 1.06-.87 1.32-1.76.82l-4.86-3.58-2.35 2.26c-.26.26-.48.48-.98.48l.35-4.95L18.1 5.9c.4-.35-.08-.55-.62-.2L6.9 12.6l-4.9-1.53c-1.07-.33-1.09-1.06.22-1.57L20.5 2.8c.89-.33 1.67.2 1.4 1.5z"/></svg></span>
+        <div><div class="lbl">Telegram ID</div><div class="val">@Macan_Dev</div></div>
+      </a>
+      <a class="glass c-link" href="https://instagram.com/Macan.Dev" target="_blank" rel="noopener">
+        <span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="#e15a4c" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="#e15a4c" stroke="none"/></svg></span>
+        <div><div class="lbl">Instagram</div><div class="val">Macan.Dev</div></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- DONATE -->
+<section id="donate">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="sec-num">06 — SUPPORT</div>
+      <h2 class="sec-title"><span lang-fa>حمایت از کار</span><span lang-en>Support the Work</span></h2>
+    </div>
+    <p class="donate-note">
+      <span lang-fa class="block">اگر کارم برایتان مفید بود، یک حمایتِ کریپتویی پژوهش را زنده نگه می‌دارد. برای کپیِ آدرس، روی دکمه بزنید.</span>
+      <span lang-en class="block">If my work helped you, a crypto tip keeps the research going. Tap the button to copy any address.</span>
+    </p>
+    <div class="grid-auto" id="donateGrid"></div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="fb"><svg class="logo coral" style="width:36px;height:auto"><use href="#macan-logo"/></svg><span class="wm">MACAN</span></div>
+    <div><span lang-fa>پژوهشگر امنیت · مهندس معکوس · توسعه‌دهنده</span><span lang-en>Security Researcher · Reverse-Engineer · Developer</span></div>
+    <div class="made mono">&copy; <span id="year"></span> Macan.Dev — Pain Makes You Stronger.</div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg><span id="toastMsg">کپی شد</span></div>
+
+<script>
+document.getElementById('year').textContent=new Date().getFullYear();
+
+/* ---------- Donations ---------- */
+const COIN={
+  btc:'<svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="#f7931a"/><path fill="#fff" d="M22 14c.3-1.9-1.2-2.9-3.2-3.6l.6-2.6-1.6-.4-.6 2.5c-.4-.1-.9-.2-1.3-.3l.6-2.5-1.6-.4-.6 2.6-3.3-.8-.4 1.7s1.2.3 1.2.3c.7.2.8.6.8 1l-1.9 7.6c-.1.2-.3.4-.6.3 0 0-1.2-.3-1.2-.3l-.8 1.9 3.1.8-.7 2.7 1.6.4.6-2.6c.4.1.9.2 1.3.3l-.6 2.6 1.6.4.7-2.7c2.8.5 4.9.3 5.7-2.2.7-2 0-3.2-1.4-3.9 1-.2 1.8-.9 2-2.3zm-3.6 5.2c-.5 2-3.7.9-4.8.6l.9-3.5c1.1.3 4.4.8 3.9 2.9zm.5-5.2c-.4 1.8-3.1.9-4 .7l.8-3.2c.9.2 3.7.6 3.2 2.5z"/></svg>',
+  eth:'<svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="#627eea"/><g fill="#fff"><path fill-opacity=".6" d="M16.1 4v8.87l7.5 3.35z"/><path d="M16.1 4L8.6 16.22l7.5-3.35z"/><path fill-opacity=".6" d="M16.1 21.97V28l7.5-10.38z"/><path d="M16.1 28v-6.03L8.6 17.62z"/><path fill-opacity=".2" d="M16.1 20.57l7.5-4.35-7.5-3.35z"/><path fill-opacity=".6" d="M8.6 16.22l7.5 4.35v-7.7z"/></g></svg>',
+  sol:'<svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="#000"/><defs><linearGradient id="solg" x1="4" y1="24" x2="26" y2="8" gradientUnits="userSpaceOnUse"><stop stop-color="#9945FF"/><stop offset="1" stop-color="#14F195"/></linearGradient></defs><g fill="url(#solg)"><path d="M9.3 19.8c.14-.14.33-.22.53-.22h13.3c.34 0 .5.4.27.65l-2.4 2.4a.75.75 0 0 1-.53.22H7.16c-.33 0-.5-.4-.26-.65z"/><path d="M9.3 9.15c.15-.14.34-.22.53-.22h13.3c.34 0 .5.41.27.65l-2.4 2.4a.75.75 0 0 1-.53.22H7.16c-.33 0-.5-.4-.26-.64z"/><path d="M20.93 14.44a.75.75 0 0 0-.53-.22H7.16c-.33 0-.5.4-.26.65l2.4 2.4c.14.13.33.21.53.21h13.3c.34 0 .5-.4.27-.64z"/></g></svg>',
+  bnb:'<svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="#f3ba2f"/><path fill="#fff" d="M12.1 14.3L16 10.4l3.9 3.9 2.27-2.27L16 5.85 9.83 12.03zM6.4 16l2.27-2.27L10.94 16l-2.27 2.27zm5.7 1.7L16 21.6l3.9-3.9 2.27 2.26L16 26.15l-6.18-6.18zM21.06 16l2.27-2.27L25.6 16l-2.27 2.27zM18.3 16L16 13.7 14.1 15.6l-.4.41L16 18.3l2.3-2.3z"/></svg>',
+  trx:'<svg viewBox="0 0 201 193" xmlns="http://www.w3.org/2000/svg"><path d="M100.8 192.148C156.049 192.148 200.8 149.236 200.8 96.3238C200.8 43.4119 156.049 0.5 100.8 0.5C45.551 0.5 0.800003 43.4119 0.800003 96.3238C0.800003 149.236 45.5893 192.148 100.8 192.148Z" fill="#FF060A"/><path d="M157.045 79.1207C151.528 74.2165 143.865 66.7452 137.658 61.4579L137.275 61.228C136.662 60.7682 135.972 60.3851 135.244 60.1169C120.225 57.4349 50.3402 44.9061 48.9992 45.0594C48.6161 45.0977 48.2329 45.251 47.9264 45.4425L47.5816 45.7107C47.1602 46.1322 46.8153 46.6303 46.6238 47.205L46.5471 47.4349V48.6992V48.8908C54.4015 69.887 85.4743 138.623 91.6046 154.791C91.9877 155.902 92.6774 157.971 93.9801 158.086H94.2866C94.9762 158.086 97.9648 154.293 97.9648 154.293C97.9648 154.293 151.336 92.3008 156.739 85.7107C157.428 84.9061 158.041 84.0249 158.578 83.1054C158.731 82.3774 158.654 81.6494 158.386 80.9598C158.118 80.2701 157.62 79.6188 157.045 79.1207ZM111.605 86.3621L134.363 68.2778L147.735 80.0786L111.605 86.3621ZM102.754 85.1743L63.5586 54.3697L127.007 65.5958L102.754 85.1743ZM106.279 93.2203L146.394 87.0134L100.532 140.002L106.279 93.2203ZM58.233 57.4732L99.4973 90.9981L93.5203 140.04L58.233 57.4732Z" fill="white"/></svg>',
+  usdt:'<svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="#26a17b"/><path fill="#fff" d="M17.9 13.9v-2h4.58V8.85H9.53V11.9h4.58v2c-3.72.17-6.52.91-6.52 1.79s2.8 1.62 6.52 1.79v6.28h3.79v-6.28c3.72-.17 6.51-.9 6.51-1.79s-2.79-1.62-6.51-1.79zm0 3.03v-.01c-.09.01-.57.04-1.62.04-.84 0-1.44-.02-1.65-.04v.01c-3.28-.14-5.73-.71-5.73-1.39s2.45-1.25 5.73-1.4v2.22c.21.02.82.05 1.66.05 1.01 0 1.52-.04 1.61-.05v-2.22c3.27.14 5.72.72 5.72 1.4s-2.45 1.24-5.72 1.38z"/></svg>'
+};
+const _tin=COIN.usdt.replace(/^<svg[^>]*>/,'').replace(/<\/svg>$/,'');
+function usdtOn(b){return '<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">'
+  +'<svg width="34" height="34" viewBox="0 0 32 32">'+_tin+'</svg>'
+  +'<circle cx="30" cy="30" r="9.6" fill="#12161d"/>'
+  +'<svg x="21.5" y="21.5" width="17" height="17">'+b+'</svg></svg>';}
+const coins=[
+  {ic:COIN.btc,name:'Bitcoin',net:'BTC',addr:'bc1qmqcwg3upptsmyqk8qmeg3wq0ylg355zuqvyca8'},
+  {ic:COIN.eth,name:'Ethereum',net:'ETH',addr:'0x5fDFEe61Af72393F2d6528D2649Df7a968d6b82C'},
+  {ic:COIN.sol,name:'Solana',net:'SOL',addr:'GoxG26rdz5sNMVNgZtvhagnm1FRspGTf3s9brSC7kN1b'},
+  {ic:COIN.bnb,name:'BNB',net:'BEP20',addr:'0x5fDFEe61Af72393F2d6528D2649Df7a968d6b82C'},
+  {ic:COIN.trx,name:'TRON',net:'TRX',addr:'TKw7XbqzfqebvkUZahVct77BtuQNUEDj9y'},
+  {ic:usdtOn(COIN.trx),name:'USDT',net:'TRC20',addr:'TKw7XbqzfqebvkUZahVct77BtuQNUEDj9y'},
+  {ic:usdtOn(COIN.bnb),name:'USDT',net:'BEP20',addr:'0x5fDFEe61Af72393F2d6528D2649Df7a968d6b82C'},
+  {ic:usdtOn(COIN.eth),name:'USDT',net:'ERC20',addr:'0x5fDFEe61Af72393F2d6528D2649Df7a968d6b82C'}
+];
+const copyIco='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+const dGrid=document.getElementById('donateGrid');
+coins.forEach(c=>{
+  const el=document.createElement('div');el.className='glass coin reveal';
+  el.innerHTML='<div class="coin-head"><div class="coin-sym">'+c.ic+'</div>'
+    +'<div><div class="coin-name">'+c.name+'</div><div class="coin-net">'+c.net+'</div></div></div>'
+    +'<div class="addr-box"><span class="addr" title="'+c.addr+'">'+c.addr+'</span>'
+    +'<button class="copy-btn" aria-label="Copy '+c.name+' '+c.net+' address">'+copyIco+'</button></div>';
+  el.querySelector('.copy-btn').addEventListener('click',function(){copyText(c.addr,this);});
+  dGrid.appendChild(el);
+});
+const toast=document.getElementById('toast'),toastMsg=document.getElementById('toastMsg');let tT;
+function showToast(m){toastMsg.textContent=m;toast.classList.add('show');clearTimeout(tT);tT=setTimeout(()=>toast.classList.remove('show'),1800);}
+function copyText(text,btn){const done=()=>{btn.classList.add('done');setTimeout(()=>btn.classList.remove('done'),1400);showToast(isFA()?'آدرس کپی شد':'Address copied');};
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(done).catch(()=>fb(text,done));}else fb(text,done);}
+function fb(text,cb){const t=document.createElement('textarea');t.value=text;t.style.position='fixed';t.style.opacity=0;document.body.appendChild(t);t.select();try{document.execCommand('copy');cb();}catch(e){}document.body.removeChild(t);}
+
+/* ---------- Language ---------- */
+const html=document.documentElement,langBtn=document.getElementById('langBtn'),langLabel=document.getElementById('langLabel');
+function isFA(){return html.getAttribute('dir')==='rtl';}
+function setLang(fa){
+  if(fa){html.setAttribute('dir','rtl');html.setAttribute('lang','fa');langLabel.textContent='English';document.title='ماکان — پژوهشگر امنیت و توسعه‌دهنده';}
+  else{html.setAttribute('dir','ltr');html.setAttribute('lang','en');langLabel.textContent='فارسی';document.title='Macan.Dev — Security Researcher & Developer';}
+  startTyping();
+}
+langBtn.addEventListener('click',()=>setLang(!isFA()));
+
+/* ---------- Typewriter ---------- */
+const roles=['Security Researcher','Reverse-Engineer','Web Pentester','App Cracker','DevOps Engineer','Business Advisor'];
+let typedEl=document.getElementById('typed'),ti=0,ci=0,del=false,tTimer=null;
+const reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+function startTyping(){clearTimeout(tTimer);ti=0;ci=0;del=false;typedEl.textContent='';if(!reduce)loop();else typedEl.textContent=roles[0];}
+function loop(){const w=roles[ti%roles.length];typedEl.textContent=w.substring(0,ci);
+  if(!del){ci++;if(ci>w.length){del=true;tTimer=setTimeout(loop,1500);return;}}else{ci--;if(ci<0){del=false;ti++;ci=0;}}
+  tTimer=setTimeout(loop,del?42:92);}
+startTyping();
+
+/* ---------- Reveal ---------- */
+function observeReveals(){
+  const els=document.querySelectorAll('.reveal:not(.in)');
+  if('IntersectionObserver' in window){
+    const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.12});
+    els.forEach(el=>io.observe(el));
+  }else els.forEach(el=>el.classList.add('in'));
+}
+observeReveals();
+
+/* ---------- GitHub projects (live) ---------- */
+const GH_USER='macan-dev';
+const fallbackRepos=[
+  {name:'EasySNI',description:'Bypass censorships using Go Lang',language:'Go',stargazers_count:445,forks_count:65,html_url:'https://github.com/macan-dev/EasySNI'},
+  {name:'CFScanner',description:'Cloudflare clean-IP scanner for reliable connections',language:'Python',stargazers_count:25,forks_count:4,html_url:'https://github.com/macan-dev/CFScanner'}
+];
+const langColors={Go:'#00add8',Python:'#3572a5',Rust:'#dea584','C++':'#f34b7d',C:'#555555','C#':'#178600',JavaScript:'#f1e05a',TypeScript:'#3178c6',Shell:'#89e051',Java:'#b07219',Kotlin:'#a97bff',HTML:'#e34c26',PowerShell:'#012456',Perl:'#0298c3'};
+const repoIco='<svg class="repo-ico" viewBox="0 0 24 24"><path d="M4 4a2 2 0 0 1 2-2h12v18H6a2 2 0 0 0-2 2z"/><path d="M4 20a2 2 0 0 1 2-2h12"/></svg>';
+const starIco='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 6.5 7 .9-5 4.8 1.3 7L12 18l-6.3 3.2L7 14.2l-5-4.8 7-.9z"/></svg>';
+const forkIco='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="12" cy="19" r="2.5"/><path d="M6 8.5v2a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3v-2M12 13.5v3"/></svg>';
+function esc(s){return (s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function renderRepos(repos){
+  const grid=document.getElementById('projGrid');grid.innerHTML='';
+  repos.forEach(r=>{
+    const col=langColors[r.language]||'#e15a4c';
+    const a=document.createElement('a');a.className='glass proj reveal';a.href=r.html_url;a.target='_blank';a.rel='noopener';
+    a.innerHTML='<div class="proj-top">'+repoIco+'<span class="proj-name">'+esc(r.name)+'</span></div>'
+      +'<div class="proj-desc">'+(esc(r.description)||'—')+'</div>'
+      +'<div class="proj-meta">'
+      +(r.language?'<span class="m"><span class="lang-dot" style="background:'+col+'"></span>'+esc(r.language)+'</span>':'')
+      +'<span class="m">'+starIco+(r.stargazers_count||0)+'</span>'
+      +'<span class="m">'+forkIco+(r.forks_count||0)+'</span></div>';
+    grid.appendChild(a);
+  });
+  observeReveals();
+}
+function loadGitHub(){
+  fetch('https://api.github.com/users/'+GH_USER)
+    .then(r=>r.ok?r.json():null).then(u=>{if(u){document.getElementById('stRepos').textContent=u.public_repos;document.getElementById('stFollowers').textContent=u.followers;}}).catch(()=>{});
+  fetch('https://api.github.com/users/'+GH_USER+'/repos?per_page=100&sort=updated')
+    .then(r=>{if(!r.ok)throw new Error('gh');return r.json();})
+    .then(list=>{
+      let repos=list.filter(x=>!x.fork).sort((a,b)=>b.stargazers_count-a.stargazers_count);
+      const total=repos.reduce((s,x)=>s+(x.stargazers_count||0),0);
+      if(total>0)document.getElementById('stStars').textContent=total;
+      renderRepos(repos.slice(0,6));
+    })
+    .catch(()=>{renderRepos(fallbackRepos);});
+}
+loadGitHub();
+
+/* ---------- Contributions heatmap ---------- */
+const hmColors=['rgba(255,255,255,.05)','rgba(225,90,76,.30)','rgba(225,90,76,.52)','rgba(225,90,76,.76)','#e15a4c'];
+function renderHeatmap(days,total){
+  const wrap=document.getElementById('heatmap');wrap.innerHTML='';
+  const pad=new Date(days[0].date+'T00:00:00').getDay();
+  for(let i=0;i<pad;i++){const c=document.createElement('div');c.className='hm-cell';c.style.visibility='hidden';wrap.appendChild(c);}
+  days.forEach(d=>{const c=document.createElement('div');c.className='hm-cell';c.style.background=hmColors[d.level||0];c.title=d.date+': '+d.count;wrap.appendChild(c);});
+  const n=(total!=null?total:days.reduce((s,d)=>s+d.count,0)).toLocaleString('en-US');
+  document.getElementById('contribTotal').innerHTML='<span lang-fa>'+n+' مشارکت</span><span lang-en>'+n+' contributions</span>';
+  document.getElementById('contribCard').style.display='';
+  observeReveals();
+}
+function loadContrib(){
+  fetch('https://github-contributions-api.jogruber.com/v4/'+GH_USER+'?y=last')
+    .then(r=>r.ok?r.json():Promise.reject())
+    .then(dd=>{
+      const days=(dd&&dd.contributions)||[];if(!days.length)return;
+      let total=null;
+      if(dd.total){total=(dd.total.lastYear!=null)?dd.total.lastYear:Object.values(dd.total).reduce((a,b)=>a+b,0);}
+      renderHeatmap(days,total);
+    }).catch(()=>{});
+}
+loadContrib();
+
+/* ---------- Liquid button + tab ripple ---------- */
+if(!reduce){
+  document.querySelectorAll('.btn, .tab, .c-link').forEach(b=>{
+    b.addEventListener('pointerdown',e=>{
+      const r=b.getBoundingClientRect();const size=Math.max(r.width,r.height)*1.5;
+      const sp=document.createElement('span');sp.className='ripple';
+      sp.style.width=sp.style.height=size+'px';
+      sp.style.left=(e.clientX-r.left)+'px';sp.style.top=(e.clientY-r.top)+'px';
+      b.appendChild(sp);setTimeout(()=>sp.remove(),640);
+    });
+  });
+}
+
+/* ---------- Bottom tab bar: active-section scroll spy ---------- */
+(function(){
+  const tabs=[].slice.call(document.querySelectorAll('.tab[data-spy]'));
+  const ids=['about','skills','projects','contact','donate'];
+  const secs=ids.map(id=>document.getElementById(id)).filter(Boolean);
+  function spy(){
+    const line=window.scrollY+window.innerHeight*0.4;
+    let cur='top';
+    if(window.scrollY>=120){secs.forEach(s=>{if(s.offsetTop<=line)cur=s.id;});}
+    const nearBottom=(window.innerHeight+window.scrollY)>=(document.body.scrollHeight-80);
+    if(nearBottom)cur='donate';
+    tabs.forEach(t=>t.classList.toggle('active',t.dataset.spy===cur));
+  }
+  window.addEventListener('scroll',spy,{passive:true});
+  window.addEventListener('resize',spy);
+  spy();
+})();
+</script>
+</body>
+</html>
