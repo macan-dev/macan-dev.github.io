@@ -166,6 +166,18 @@ html[dir="rtl"] .sec-title{font-family:var(--fa)}
 .stat{padding:1rem 1.6rem;text-align:center;min-width:120px}
 .stat b{display:block;font-family:var(--mono);font-size:1.7rem;color:var(--fg);line-height:1}
 .stat span{font-size:.76rem;color:var(--muted-2);letter-spacing:.5px;margin-top:.35rem;display:block}
+.visit-stat{min-width:176px}
+.spark{display:flex;align-items:flex-end;gap:3px;height:34px;margin-top:.7rem}
+.spark-bar{flex:1;background:linear-gradient(180deg,var(--coral-2),var(--coral));border-radius:3px 3px 2px 2px;min-height:6px;box-shadow:var(--hi);transition:height .5s cubic-bezier(.2,.8,.25,1)}
+.visit-today{font-size:.72rem;color:var(--muted-2);margin-top:.55rem;letter-spacing:.3px}
+.visit-today b{display:inline;font-size:.8rem;font-family:var(--mono);color:var(--fg)}
+/* hero visit-count pill (public, shown to every visitor) */
+.visit-pill{display:none;align-items:center;gap:.5rem;margin-top:1.5rem;padding:.5rem .95rem;border-radius:999px;
+  max-width:92vw;white-space:nowrap;vertical-align:middle;
+  background:var(--glass);border:1px solid var(--glass-brd);-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);box-shadow:var(--hi)}
+.visit-pill svg{width:16px;height:16px;stroke:var(--coral);fill:none;stroke-width:2;flex-shrink:0}
+.visit-pill b{font-family:var(--mono);font-size:.95rem;color:var(--fg)}
+.visit-pill span{font-size:.8rem;color:var(--muted-2)}
 
 /* Skills */
 .grid-auto{display:grid;grid-template-columns:repeat(auto-fit,minmax(272px,1fr));gap:1.1rem}
@@ -253,6 +265,7 @@ footer .fb{display:flex;align-items:center;justify-content:center;gap:.55rem;mar
 footer .fb svg{width:30px;height:30px}
 footer .fb .wm{font-family:var(--sans);font-weight:800;letter-spacing:2px;color:var(--fg)}
 footer .made{font-family:var(--mono);font-size:.75rem;margin-top:.7rem;opacity:.8}
+footer .privacy{font-size:.72rem;color:var(--muted-2);margin-top:.6rem;max-width:48ch;margin-inline:auto;opacity:.8;line-height:1.5}
 
 .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
 .reveal.in{opacity:1;transform:none}
@@ -343,6 +356,10 @@ html[dir="ltr"] [lang-en].block{display:block}
         <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.3-1.8-1.3-1.8-1.1-.7 0-.7 0-.7 1.2 0 1.9 1.2 1.9 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17 4.6 18 4.9 18 4.9c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.1 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3z"/></svg>
         <span lang-fa>گیت‌هاب</span><span lang-en>GitHub</span>
       </a>
+    </div>
+    <div class="visit-pill" id="visitPill">
+      <svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+      <b id="visitPillNum">0</b><span><span lang-fa>بازدید</span><span lang-en>visits</span></span>
     </div>
   </div>
 </section>
@@ -436,6 +453,12 @@ html[dir="ltr"] [lang-en].block{display:block}
       <div class="glass stat"><b id="stRepos">4</b><span lang-fa>مخزن</span><span lang-en>Repositories</span></div>
       <div class="glass stat"><b id="stFollowers">111</b><span lang-fa>دنبال‌کننده</span><span lang-en>Followers</span></div>
       <div class="glass stat"><b id="stStars">470+</b><span lang-fa>ستاره</span><span lang-en>Total Stars</span></div>
+      <div class="glass stat visit-stat" id="visitCard" style="display:none">
+        <b id="visitTotal">0</b>
+        <span><span lang-fa>بازدید کل</span><span lang-en>Total Visits</span></span>
+        <div class="spark" id="visitSpark"></div>
+        <div class="visit-today"><span lang-fa>امروز</span><span lang-en>Today</span>: <b id="visitToday">0</b></div>
+      </div>
     </div>
     <div class="glass contrib reveal" id="contribCard" style="display:none">
       <div class="contrib-head">
@@ -534,6 +557,7 @@ html[dir="ltr"] [lang-en].block{display:block}
     <div class="fb"><svg class="logo coral" style="width:36px;height:auto"><use href="#macan-logo"/></svg><span class="wm">MACAN</span></div>
     <div><span lang-fa>پژوهشگر امنیت · مهندس معکوس · توسعه‌دهنده</span><span lang-en>Security Researcher · Reverse-Engineer · Developer</span></div>
     <div class="made mono">&copy; <span id="year"></span> Macan.Dev — Pain Makes You Stronger.</div>
+    <div class="privacy"><span lang-fa>این سایت آمار بازدید ناشناس (کشور تقریبی، مرورگر، ارجاع‌دهنده) را برای مدیر ثبت می‌کند.</span><span lang-en>This site logs anonymous visit stats (approx. country, browser, referrer) for the owner.</span></div>
   </div>
 </footer>
 
@@ -677,6 +701,49 @@ function loadContrib(){
     }).catch(()=>{});
 }
 loadContrib();
+
+/* ---------- Visitor counter + analytics ----------
+   Set ANALYTICS_ENDPOINT to your deployed Cloudflare Worker URL (see worker.js / README).
+   The Telegram bot token lives ONLY inside the Worker as a secret — never here. */
+const ANALYTICS_ENDPOINT=''; /* e.g. 'https://macan-visits.YOURNAME.workers.dev' */
+function animateCount(el,to){
+  if(!el)return; if(reduce){el.textContent=(to||0).toLocaleString('en-US');return;}
+  const dur=900,t0=performance.now();
+  (function step(t){const p=Math.min(1,(t-t0)/dur);el.textContent=Math.round((to||0)*(1-Math.pow(1-p,3))).toLocaleString('en-US');if(p<1)requestAnimationFrame(step);})(t0);
+}
+function renderVisitors(d){
+  const pill=document.getElementById('visitPill');
+  if(pill){pill.style.display='inline-flex';animateCount(document.getElementById('visitPillNum'),d.total||0);}
+  const card=document.getElementById('visitCard');
+  if(card){
+    card.style.display='';
+    animateCount(document.getElementById('visitTotal'),d.total||0);
+    const t=document.getElementById('visitToday');if(t)t.textContent=(d.today||0).toLocaleString('en-US');
+    const spark=document.getElementById('visitSpark');if(spark){spark.innerHTML='';
+      const days=d.days||[];const max=Math.max(1,...days.map(x=>x.count||0));
+      days.forEach(x=>{const b=document.createElement('div');b.className='spark-bar';
+        b.style.height=Math.max(6,Math.round((x.count||0)/max*100))+'%';
+        b.title=x.date+': '+(x.count||0);spark.appendChild(b);});
+    }
+  }
+  observeReveals();
+}
+function initVisitors(){
+  if(!ANALYTICS_ENDPOINT)return; /* not configured yet → card stays hidden */
+  const payload={
+    page:location.pathname,
+    ref:document.referrer||'',
+    lang:navigator.language||'',
+    tz:(Intl.DateTimeFormat().resolvedOptions().timeZone)||'',
+    screen:(window.screen?screen.width+'x'+screen.height:''),
+    device:/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)?'Mobile':'Desktop'
+  };
+  fetch(ANALYTICS_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+    .then(r=>r.ok?r.json():Promise.reject())
+    .then(renderVisitors)
+    .catch(()=>{});
+}
+initVisitors();
 
 /* ---------- Liquid button + tab ripple ---------- */
 if(!reduce){
