@@ -705,7 +705,7 @@ loadContrib();
 /* ---------- Visitor counter + analytics ----------
    Set ANALYTICS_ENDPOINT to your deployed Cloudflare Worker URL (see worker.js / README).
    The Telegram bot token lives ONLY inside the Worker as a secret — never here. */
-const ANALYTICS_ENDPOINT=''; /* e.g. 'https://macan-visits.YOURNAME.workers.dev' */
+const ANALYTICS_ENDPOINT='https://round-sun-154c.macan-developer.workers.dev'; /* e.g. 'https://macan-visits.YOURNAME.workers.dev' */
 function animateCount(el,to){
   if(!el)return; if(reduce){el.textContent=(to||0).toLocaleString('en-US');return;}
   const dur=900,t0=performance.now();
